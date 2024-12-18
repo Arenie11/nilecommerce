@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
-from . serializers import UserSerializer, ProfileSerializer, RegistrationSerializer
+from rest_framework.decorators import permission_classes
+from . serializers import UserSerializer, UpdateProfileSerializer, RegistrationSerializer
 from . models import Profile
 from django.contrib.auth.models import User
 
@@ -27,6 +28,7 @@ class RegistrationView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
 #dashboard
+@permission_classes([IsAuthenticated])
 class DashboardView(APIView):
     def get (self, request):
         try:
@@ -37,7 +39,6 @@ class DashboardView(APIView):
         
 #login
 class LoginView(APIView):
-    permission_class= [IsAuthenticated]
     def post(self,request):
         try:
             username= request.data.get('username')
@@ -107,7 +108,7 @@ class UpdateProfileView(APIView):
             if serializer.is_valid():
                 serializer.is_valid()
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
                 return Response({'error':str(e)}, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
 

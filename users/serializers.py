@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model= UserSerializer()
-        fields=[ 'fullname','gender', 'phone', 'profile_pix'] 
+        fields=['fullname','gender', 'phone', 'profile_pix'] 
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password1= serializers.CharField(write_only=True)
@@ -45,4 +45,25 @@ class RegistrationSerializer(serializers.ModelSerializer):
         SendMail(email)
         return profile
 
-    
+    class UpdateProfileSerializer(serializers.ModelSerializer):
+        username= serializers.charField(source= 'user.username' , required=False)
+        email= serializers.EmailField(source='user.username' , required=False)
+        class Meta:
+            model = Profile
+            fields=['fullname','username','email', 'gender', 'phone', 'profile_pix']
+        def update(self, instance, validated_data):
+            user_data = validated_data.pop ('user, {}')
+            user = instance.user
+            if 'username' in user_data:
+                user.username= user_data['username']
+            if 'email' in user_data:
+                user.username= user_data['email']
+            user.save()
+
+            instance.fullname = validated_data.get ('fullname')
+            instance.gender = validated_data.get ('gender')
+            instance.phone = validated_data.get ('phone')
+            instance.profile_pix = validated_data.get ('profile_pix')
+            instance.save()
+
+            return instance
