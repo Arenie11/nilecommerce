@@ -124,6 +124,9 @@ EMAIL_USE_TLS = True  # True for TLS, False for SSL
 EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER')) # SMTP server username
 EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD')) 
 
+#paystack
+PAYSTACK_SECRET_KEY = str(os.getenv('PAYSTACK_SECRET_KEY')) 
+PAYSTACK_PUBLIC_KEY = str(os.getenv('PAYSTACK_PUBLIC_KEY')) 
 
 REST_FRAMEWORK = {
     

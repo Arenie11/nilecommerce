@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from users.models import Profile
 import secrets
+from . import paystack
 #category Model
 class Category (models.Model):
     title = models.CharField(max_length=50)
@@ -105,7 +106,7 @@ class Order (models.Model):
     
 #verifying payment on paystack
 def verify_payment(self):
-    #paystack = Paystack() --- using paystack module
+    paystack = Paystack() #--- using paystack module
     status,result = paystack.verify_payment(self.ref)
     if status and result.get('success')== 'success':
         #ensure the amount matches
